@@ -1,0 +1,10 @@
+main: com.jrooke.DeathSwap.Plugin
+name: DeathSwap
+version: 1.0
+api-version: 1.13
+author: jrooke
+commands:
+   startDeathSwap:
+      description: Starts death swap
+   stopDeathSwap:
+      description: Stops death swap
