@@ -17,8 +17,10 @@ public class Game extends BukkitRunnable implements Listener{
 	private final int roundLength;
 	private List<Player> players;
 	private List<Swap> swaps;
+	private Plugin plugin;
 	
 	public Game(Plugin plugin) {
+		this.plugin = plugin;
 		tickCounter = roundLength = Integer.valueOf(plugin.getConfig().getString("roundLength"))*20;
 		players = new ArrayList<Player>(Bukkit.getOnlinePlayers());
 		swaps = new ArrayList<Swap>();
@@ -30,15 +32,25 @@ public class Game extends BukkitRunnable implements Listener{
 		Player player = event.getEntity();
 		players.remove(player);
 		Bukkit.broadcastMessage(ChatColor.YELLOW + player.getDisplayName() + ChatColor.RED + " is out!!!!");
-		for(Player p : players) {
-			Bukkit.broadcastMessage(p.getDisplayName() + " is still in the game.");
+		if(onePlayerRemains()) {
+			Bukkit.broadcastMessage(ChatColor.YELLOW + players.get(0).getDisplayName() + ChatColor.GREEN+" has won!!!");
+			plugin.stop();
 		}
     }
 
 	@Override
 	public void run() {	
 		if (tickCounter == roundLength) {
+			Bukkit.broadcastMessage(ChatColor.GREEN + "Starting Death Swap!");
 			Collections.shuffle(players);
+		}
+		
+		if (isMinuteMultiple()) {
+			Bukkit.broadcastMessage(ChatColor.RED +getMinutesRemaining().toString()+" minute(s) remaining!");
+		}
+		
+		if (isLast20Seconds()) {
+			Bukkit.broadcastMessage(ChatColor.RED + getSecondsRemaining().toString()+" seconds remaining!");
 		}
 		
 		tickCounter--;
@@ -58,25 +70,26 @@ public class Game extends BukkitRunnable implements Listener{
 			tickCounter = roundLength;
 		}
 		
-		if (isMinuteMultiple()) {
-			Bukkit.broadcastMessage(getSecondsRemaining()/60+" minute(s) remaining!");
-		}
 		
-		if (isLast20Seconds()) {
-			Bukkit.broadcastMessage(getSecondsRemaining()+" seconds remaining!");
-		}
 	}
 	
+	private boolean onePlayerRemains() {
+		return players.size() == 1;
+	}
+
 	private boolean isMinuteMultiple() {
-		return getSecondsRemaining() % 60 == 0 && tickCounter % 20 == 0 && tickCounter < 0;
+		return getSecondsRemaining() % 60 == 0 && tickCounter % 20 == 0 && tickCounter > 0;
 	}
 
 	private boolean isLast20Seconds() {
-		return getSecondsRemaining() <= 20 && tickCounter % 20 == 0;
+		return getSecondsRemaining() <= 20 && tickCounter % 20 == 0 && tickCounter > 0;
 	}
 
 	private Integer getSecondsRemaining() {
 		return tickCounter / 20;
 	}
 	
+	private Integer getMinutesRemaining() {
+		return Math.round(getSecondsRemaining() / 60);
+	}
 }
