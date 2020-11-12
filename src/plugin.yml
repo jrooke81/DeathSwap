@@ -1,13 +1,14 @@
 main: com.jrooke.DeathSwap.Plugin
 name: DeathSwap
-version: 1.0
+version: 1.3
 api-version: 1.13
 author: jrooke
 commands:
-   startds:
+   startDs:
       description: Starts death swap
-   stopds:
+   stopDs:
       description: Stops death swap
-   skipds:
-      description: Sets the time remaining to 20 seconds
-      
+   skipDs:
+      description: Skips to the last 10 seconds
+   setDsRoundTime:
+      description: Sets the round time for the next game

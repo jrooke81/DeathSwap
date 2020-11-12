@@ -19,9 +19,9 @@ public class Game extends BukkitRunnable implements Listener{
 	private List<Swap> swaps;
 	private Plugin plugin;
 	
-	public Game(Plugin plugin) {
+	public Game(Plugin plugin, int roundLength) {
 		this.plugin = plugin;
-		tickCounter = roundLength = Integer.valueOf(plugin.getConfig().getString("roundLength"))*20;
+		tickCounter = this.roundLength = roundLength;
 		players = new ArrayList<Player>(Bukkit.getOnlinePlayers());
 		swaps = new ArrayList<Swap>();
 	}
@@ -99,6 +99,11 @@ public class Game extends BukkitRunnable implements Listener{
 	}
 
 	public void skipRound() {
-		tickCounter = 4000;
+		tickCounter = 200;
+	}
+
+	public void setRoundTime() {
+		// TODO Auto-generated method stub
+		
 	}
 }
