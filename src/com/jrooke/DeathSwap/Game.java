@@ -46,11 +46,11 @@ public class Game extends BukkitRunnable implements Listener{
 		}
 		
 		if (isMinuteMultiple()) {
-			Bukkit.broadcastMessage(ChatColor.RED +getMinutesRemaining().toString()+" minute(s) remaining!");
+			Bukkit.broadcastMessage(ChatColor.RED +pluralize(getMinutesRemaining(),"minute") + " remaining!");
 		}
 		
 		if (isLast20Seconds()) {
-			Bukkit.broadcastMessage(ChatColor.RED + getSecondsRemaining().toString()+" seconds remaining!");
+			Bukkit.broadcastMessage(ChatColor.RED + pluralize(getSecondsRemaining(),"second") + " remaining!");
 		}
 		
 		tickCounter--;
@@ -69,10 +69,15 @@ public class Game extends BukkitRunnable implements Listener{
 			swaps.clear();
 			tickCounter = roundLength;
 		}
-		
-		
 	}
 	
+	private String pluralize(Integer amount, String word) {
+		if(amount > 1) {
+			word += "s";
+		}
+		return amount + " " + word;
+	}
+
 	private boolean onePlayerRemains() {
 		return players.size() == 1;
 	}
@@ -91,5 +96,9 @@ public class Game extends BukkitRunnable implements Listener{
 	
 	private Integer getMinutesRemaining() {
 		return Math.round(getSecondsRemaining() / 60);
+	}
+
+	public void skipRound() {
+		tickCounter = 4000;
 	}
 }

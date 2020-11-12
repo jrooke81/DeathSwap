@@ -20,7 +20,7 @@ public class Swap {
 	public void prime() {
 		targetLocation = target.getLocation();
 		targetChunk = targetLocation.getChunk();
-		targetChunk.setForceLoaded(false);
+		targetChunk.setForceLoaded(true);
 	}
 	
 	public void activate() {

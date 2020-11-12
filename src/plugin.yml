@@ -4,7 +4,10 @@ version: 1.0
 api-version: 1.13
 author: jrooke
 commands:
-   startDeathSwap:
+   startds:
       description: Starts death swap
-   stopDeathSwap:
+   stopds:
       description: Stops death swap
+   skipds:
+      description: Sets the time remaining to 20 seconds
+      

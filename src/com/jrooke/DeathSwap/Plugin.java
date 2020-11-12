@@ -3,6 +3,7 @@ package com.jrooke.DeathSwap;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.jrooke.DeathSwap.Commands.SkipCommand;
 import com.jrooke.DeathSwap.Commands.StartCommand;
 import com.jrooke.DeathSwap.Commands.StopCommand;
 
@@ -26,8 +27,9 @@ public class Plugin extends JavaPlugin{
 	}
 	
 	public void onEnable() {
-		this.getCommand("startDeathSwap").setExecutor(new StartCommand(this));
-		this.getCommand("stopDeathSwap").setExecutor(new StopCommand(this));
+		this.getCommand("startds").setExecutor(new StartCommand(this));
+		this.getCommand("stopds").setExecutor(new StopCommand(this));
+		this.getCommand("skipds").setExecutor(new SkipCommand(this));
 	}
 
 	public boolean stop() {
@@ -35,6 +37,14 @@ public class Plugin extends JavaPlugin{
 			pluginTask.cancel();
 			HandlerList.unregisterAll(pluginTask);
 			isRunning = false;
+			return true;
+		}
+		return false;
+	}
+
+	public boolean skip() {
+		if(pluginTask != null) {
+			pluginTask.skipRound();
 			return true;
 		}
 		return false;
