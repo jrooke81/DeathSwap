@@ -56,7 +56,7 @@ public class Plugin extends JavaPlugin{
 	}
 
 	public void setRoundTime(int roundLength) {
-		this.roundLength = roundLength;
+		this.roundLength = roundLength * 20;
 		Bukkit.broadcastMessage("Round length has been set to "+roundLength+" seconds.");
 	}
 }

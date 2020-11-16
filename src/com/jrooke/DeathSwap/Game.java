@@ -6,11 +6,15 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.jrooke.Sound.Pitch;
+import com.jrooke.Sound.SoundHelper;
 
 public class Game extends BukkitRunnable implements Listener{
 	private int tickCounter;
@@ -29,6 +33,7 @@ public class Game extends BukkitRunnable implements Listener{
 	@EventHandler
     public void onPlayerDeath(PlayerDeathEvent event)
     {
+		SoundHelper.playJingle(Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, players, SoundHelper.MEDIUM_DELAY, new float[]{Pitch.G3S,Pitch.G3,Pitch.F3S});
 		Player player = event.getEntity();
 		players.remove(player);
 		Bukkit.broadcastMessage(ChatColor.YELLOW + player.getDisplayName() + ChatColor.RED + " is out!!!!");
@@ -47,19 +52,27 @@ public class Game extends BukkitRunnable implements Listener{
 		
 		if (isMinuteMultiple()) {
 			Bukkit.broadcastMessage(ChatColor.RED +pluralize(getMinutesRemaining(),"minute") + " remaining!");
+			SoundHelper.playJingle(Sound.BLOCK_NOTE_BLOCK_CHIME, players,SoundHelper.SHORT_DELAY, new float[]{Pitch.G4S,Pitch.G4,Pitch.F4S});
 		}
 		
 		if (isLast20Seconds()) {
 			Bukkit.broadcastMessage(ChatColor.RED + pluralize(getSecondsRemaining(),"second") + " remaining!");
+			players.stream().forEach((player)->SoundHelper.playJingleHeartbeat(player));
 		}
 		
 		tickCounter--;
 		
-		if (tickCounter <= 0) {
+		if(tickCounter == 10) {
 			for(int i = 0; i < players.size(); i++) {
 				int targetPlayerIndex = i == players.size()-1 ? 0 : i+1;
-				swaps.add(new Swap(players.get(i),players.get(targetPlayerIndex)));
+				swaps.add(new Swap(plugin, players.get(i),players.get(targetPlayerIndex)));
 			}
+			swaps.stream().forEach((swap) -> {
+				swap.preloadChunks();});
+		}
+		
+		if (tickCounter <= 0) {
+			
 			for(Swap s : swaps) {
 				s.prime();
 			}
